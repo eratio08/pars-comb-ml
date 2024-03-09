@@ -1,0 +1,8 @@
+(tests
+ (names test)
+ (libraries pars_comb alcotest fmt))
+
+(env
+ (dev
+  (flags
+   (:standard -warn-error -A))))

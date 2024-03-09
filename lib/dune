@@ -1,0 +1,8 @@
+(library
+ (public_name pars_comb_ml)
+ (name pars_comb))
+
+(env
+ (dev
+  (flags
+   (:standard -warn-error -A))))
