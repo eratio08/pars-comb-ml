@@ -6,6 +6,8 @@
 (maintainers "Maintainer Name")
 (license MIT)
 
+(map_workspace_root false)
+
 (package
  (name pars_comb_ml)
  (synopsis "A short synopsis")

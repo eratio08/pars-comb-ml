@@ -1,5 +1,6 @@
 (tests
  (names test)
+ (modes byte exe)
  (libraries pars_comb alcotest fmt))
 
 (env
