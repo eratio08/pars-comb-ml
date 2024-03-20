@@ -225,6 +225,28 @@ let test_chain_l_1 () =
     (parse (chain_l_1 (string "a") (string "b" >>= fun _ -> return ( ^ ))) "abab")
 ;;
 
+let test_space () =
+  let open Pars_comb.Parser in
+  Alcotest.(check Util.StringParser.testable)
+    "space match single space"
+    [ " ", "" ]
+    (parse space " ");
+  Alcotest.(check Util.StringParser.testable)
+    "space match multiple spaces"
+    [ "    ", "" ]
+    (parse space "    ");
+  Alcotest.(check Util.StringParser.testable)
+    "space match tabs"
+    [ "\t\t", "" ]
+    (parse space "\t\t");
+  Alcotest.(check Util.StringParser.testable)
+    "space match new-lines"
+    [ "\n\n", "" ]
+    (parse space {|
+
+|})
+;;
+
 let test_token () =
   let open Pars_comb.Parser in
   Alcotest.(check Util.StringParser.testable)
@@ -292,6 +314,7 @@ let suite : unit Alcotest.test_case list =
   ; "Parser.sep_by_1", `Quick, test_sep_by_1
   ; "Parser.chain_l", `Quick, test_chain_l
   ; "Parser.chain_l_1", `Quick, test_chain_l_1
+  ; "Parser.space", `Quick, test_space
   ; "Parser.token", `Quick, test_token
   ; "Parser.symb", `Quick, test_symb
   ; "Parser.apply", `Quick, test_apply

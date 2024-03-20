@@ -50,12 +50,10 @@ end
 module Parser : sig
   type 'a t = Parser of (string -> ('a * string) list)
 
-  include Monad with type 'a t := 'a t
+  include MonadPlus with type 'a t := 'a t
 
   val parse : 'a t -> string -> ('a * string) list
   val item : char t
-  val zero : 'a t
-  val ( ++ ) : 'a t -> 'a t -> 'a t
   val ( +++ ) : 'a t -> 'a t -> 'a t
   val sat : (char -> bool) -> char t
   val char : char -> char t
