@@ -135,7 +135,9 @@ module Parser : sig
   (** A parser that consumes a single non-empty character. *)
   val item : char t
 
-  (** Deterministic choice operator for parsers, behaves like [++] but only returns a single result. *)
+  (** Deterministic choice operator for parsers, behaves like [++] but only returns a single result.
+      So parser [t1] and [t2] are both applied to the argument string the first evaluated result is returned.
+      This operator is often known as [<|>]. *)
   val ( +++ ) : 'a t -> 'a t -> 'a t
 
   (** Conditional combinator. Yields a parser that consumes a character in case the predicate [p] is satisfied. *)

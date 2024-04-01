@@ -30,15 +30,17 @@ module ArithmeticExpressionParser = struct
     token (sat is_digit) >>= fun x -> return (Char.code x - Char.code '0')
   ;;
 
-  (* TODO Find a way around this unit-quirk which seems to be required in mutual-recursive declarations. *)
-  let rec expr (() : unit) : int t = chain_l_1 (term ()) add_op
-
-  (** Parses a factor that is followed by ["*"] or ["/"]. *)
-  and term (() : unit) : int t = chain_l_1 (factor ()) mul_op
-
-  (** Parses a digit or an expression that is enclosed in '(' and ')' returning the resulting integer. *)
-  and factor (() : unit) : int t =
-    digit +++ (symb "(" >>= fun _ -> expr () >>= fun n -> symb ")" >>= fun _ -> return n)
+  (* TODO: Find a way around this unit-quirk. This is required for now as a let-rec declaration need to be a function.
+     Maybe fix can help here... needs more study.
+  *)
+  let rec expr (() : unit) : int t =
+    (* Parses a digit or an expression that is enclosed in '(' and ')' returning the resulting integer. *)
+    let factor =
+      digit +++ (symb "(" >>= fun _ -> expr () >>= fun n -> symb ")" >>= fun _ -> return n)
+    in
+    (* Parses a factor that is followed by ["*"] or ["/"]. *)
+    let term = chain_l_1 factor mul_op in
+    chain_l_1 term add_op
   ;;
 end
 
@@ -48,7 +50,11 @@ let test_simple_expression () =
   Alcotest.(check Util.IntParser.testable)
     "should return -1"
     [ -1, "" ]
-    (apply (expr ()) " 1 - 2 * 3 + 4 ")
+    (apply (expr ()) " 1 - 2 * 3 + 4 ");
+  Alcotest.(check Util.IntParser.testable)
+    "should return 5"
+    [ 5, "" ]
+    (apply (expr ()) "2 * 5 / (1 + 1)")
 ;;
 
 let suite : unit Alcotest.test_case list = [ "simple", `Quick, test_simple_expression ]
